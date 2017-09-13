@@ -28,6 +28,7 @@ const (
 			img.src = '/img?' + Math.random();
 			if (img.width / img.height > window.innerWidth / window.innerHeight) {
 				img.width = window.innerWidth;
+				img.height = window.innerHeight;
 			} else {
 				img.height = window.innerHeight;
 			}
