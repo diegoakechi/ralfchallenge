@@ -21,6 +21,7 @@ const (
 	<title>Slide Show</title>
 	<style>
 	body, html {
+		position: relative;
     	height: 100%;
     	margin: 0;
     	padding: 0;
@@ -30,7 +31,6 @@ const (
 	#container {
     	width: 100%;
     	height: 100%;
-    	padding: 0 5%;
     	box-sizing:border-box;
     	background-color: rgb(0,0,0);
 	}
@@ -42,9 +42,15 @@ const (
 		background-repeat: no-repeat;
 		background-position: center;
 	}
+	img#logo {
+		position: absolute;
+		bottom: 20px;
+		right: 20px;
+	}
 	</style>
 </head>
 <body>
+	<img src="https://www.suse.com/brandcentral/img/suse/logos_do.png" id="logo" />
 	<div id="container">
 		<div id="box"></div>
 	</div>
@@ -53,7 +59,7 @@ const (
 		var refresh = function() {
 			var box = document.getElementById('box');
 			box.style.backgroundImage = "url(" + '/img?' + Math.random() + ")";
-    		setTimeout(refresh, 1000);
+    		setTimeout(refresh, 5000);
 		};
 		refresh();
 	</script>
