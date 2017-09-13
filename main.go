@@ -19,20 +19,47 @@ const (
 <html>
 <head>
 	<title>Slide Show</title>
+	<style>
+	body, html {
+		position: relative;
+    	height: 100%;
+    	margin: 0;
+    	padding: 0;
+		margin: 0;
+	}
+
+	#container {
+    	width: 100%;
+    	height: 100%;
+    	box-sizing:border-box;
+    	background-color: rgb(0,0,0);
+	}
+
+	#box {
+    	height:100%;
+		background-image: none;
+    	background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+	img#logo {
+		position: absolute;
+		bottom: 20px;
+		right: 20px;
+	}
+	</style>
 </head>
-<body style="height: 100%; width: 100%">
-	<img id="img" src="" />
+<body>
+	<img src="https://www.suse.com/brandcentral/img/suse/logos_do.png" id="logo" />
+	<div id="container">
+		<div id="box"></div>
+	</div>
+
 	<script type="text/javascript">
 		var refresh = function() {
-			var img = document.getElementById('img');
-			img.src = '/img?' + Math.random();
-			if (img.width / img.height > window.innerWidth / window.innerHeight) {
-				img.width = window.innerWidth;
-				img.height = window.innerHeight;
-			} else {
-				img.height = window.innerHeight;
-			}
-			setTimeout(refresh, 1000);
+			var box = document.getElementById('box');
+			box.style.backgroundImage = "url(" + '/img?' + Math.random() + ")";
+    		setTimeout(refresh, 5000);
 		};
 		refresh();
 	</script>
