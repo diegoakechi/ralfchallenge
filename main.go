@@ -73,11 +73,23 @@ const (
 <html>
 <head>
 	<title>Upload Picture</title>
+	<style>
+		input[type="file"] {
+			height: 3em;
+			margin-top: 1em;
+		}
+		input[type="submit"] {
+			height: 3em;
+			margin-top: 2em;
+		}
+	</style>
 </head>
 <body>
-	<p>%s</p>
+	<h1>Upload an Image</h1>
+	<p style="color: green;">%s</p>
 	<form  method="post" action="/upload" enctype="multipart/form-data">
 		<input type="file" name="image"/>
+		<br/>
 		<input type="submit" value="Upload"/>
 	</form>
 </body>
