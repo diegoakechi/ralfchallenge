@@ -46,6 +46,7 @@ const (
 		position: absolute;
 		bottom: 20px;
 		right: 20px;
+		opacity: .7;
 	}
 	</style>
 </head>
