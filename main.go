@@ -11,6 +11,7 @@ import (
 	"log"
 	"flag"
 	"os"
+	"net"
 )
 
 const (
@@ -125,7 +126,26 @@ func main() {
 	}
 
 	http.DefaultServeMux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(SlideShow))
+
+		host, _ , err := net.SplitHostPort(r.RemoteAddr)
+		if err != nil {
+			log.Print(err)
+			http.Error(w,"Sorry, your access is not authorized", http.StatusForbidden)
+			return
+		}
+
+		//We allow slideshow access only to localhost to avoid people copying Photos inside party network.
+		if (host== "::1" || host=="127.0.0.1") {
+
+			w.Write([]byte(SlideShow))
+
+		} else {
+			log.Printf(r.RemoteAddr)
+			http.Error(w,"Sorry, your access is not authorized", http.StatusForbidden)
+			return
+		}
+
+
 	})
 
 	http.DefaultServeMux.HandleFunc("/img", func(w http.ResponseWriter, r *http.Request) {
