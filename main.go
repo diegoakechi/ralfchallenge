@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"math/rand"
 	"net"
 	"net/http"
 	"os"
 	"path"
 	"strings"
 	"time"
+	"sort"
 )
 
 const (
@@ -113,24 +113,36 @@ func listImageDir() (ret []string) {
 		}
 		ret = append(ret, entry.Name())
 	}
+	sort.Strings(ret)
 	return
 }
 
-func readRandImage() (contentType string, content []byte) {
-	for i := 0; i < 100; i++ {
-		entries := listImageDir()
-		picked := entries[rand.Intn(len(entries))]
-		content, err := ioutil.ReadFile(path.Join(imageDir, picked))
-		if err != nil {
-			panic(err)
-		}
-		contentType = http.DetectContentType(content)
-		if strings.HasPrefix(contentType, "image/") {
-			return contentType, content
-		}
-		time.Sleep(1 * time.Millisecond)
+var counter int
+
+func readRandImage(retries int) (contentType string, content []byte) {
+	counter++
+	entries := listImageDir()
+	if len(entries) == 0 {
+		log.Printf("the picture dir is empty")
+		return "", []byte{}
 	}
-	return "", []byte{}
+	picked := entries[counter%len(entries)]
+	content, err := ioutil.ReadFile(path.Join(imageDir, picked))
+	if err != nil {
+		panic(err)
+	}
+	contentType = http.DetectContentType(content)
+	if strings.HasPrefix(contentType, "image/") {
+		log.Printf("serving picture %s", picked)
+		return contentType, content
+	} else {
+		time.Sleep(1 * time.Millisecond)
+		if retries == 1000 {
+			log.Printf("failed to find a picture among directotry content")
+			return "", []byte{}
+		}
+		return readRandImage(retries + 1)
+	}
 }
 
 func main() {
@@ -161,7 +173,7 @@ func main() {
 	})
 
 	http.DefaultServeMux.HandleFunc("/img", func(w http.ResponseWriter, r *http.Request) {
-		contentType, imageContent := readRandImage()
+		contentType, imageContent := readRandImage(0)
 		w.Header().Set("Content-Type", contentType)
 		w.Write(imageContent)
 	})
